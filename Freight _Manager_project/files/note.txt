@@ -1,0 +1,17 @@
+python3 -m venv env
+source env/bin/activate
+python3 --version
+
+- a python program that will manage boxes and 
+containers modeled after a freight management 
+operation
+
+- will execute single- and multi-table SQL
+statements
+
+- will expose a console-based menu to allow users 
+to manage the invetory and view business statistics
+
+- persistence to be implemented in a file-based 
+SQLite database, with validation mostly on the 
+application layer

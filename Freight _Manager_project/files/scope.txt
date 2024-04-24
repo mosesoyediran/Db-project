@@ -1,0 +1,108 @@
+#1 Scope of work:
+# - create an interface that offers the user a menu of 5 choices:
+# -- 1. Add a box type
+# -- 2. Show box types
+# -- 3. Load box to container
+# -- 4. Show containers
+# -- 5. Summary Report
+# -- X. Close
+
+# - for now, each choice should print a simple statement indicating
+# the choice, eg "Choice 2 selected"
+
+# - the menu should be offered continuously until the user chooses X,
+# in which case, the interface greets the user and the
+# program terminates
+
+
+#2 Scope of work:
+# - convert the data model from the previous lecture to a DDL script
+
+# - add a database-level contstraint to ensure that box volume does
+# not exceed 10
+
+# - when the program starts, create a SQLite database and execute
+# the DDL
+
+
+#
+#
+#3 Scope of work:
+# - write the db helper to add the box to the database
+
+# - replace the corresponding menu item and confirm users are able to
+# insert valid boxes
+
+
+
+#
+#
+#4 Scope of work:
+# - complete the implementation for Choice 2, displaying a list of box types and
+# their dimensions
+
+# - ideally, the displayed list should show different column labels than what we
+# store in the database, e.g. "Height" instead of "x", "Width" rather than "y",
+# and so on
+
+
+
+#
+#
+#5 Scope of work:
+# - complete the implementation for Choice 3
+#
+# - the user should specify a box by name (not by id)
+#
+# - the program should confirm that such a box exists
+#
+# - if it does, the user should specify a container id
+#
+# - the program should ensure that a container does not store more than 30 units
+# of volume (e.g. cubic meters)
+#
+# - if any of the "happy path" conditions are not met, the user is notified of
+# the problem with a descriptive message, after which the program returns to
+# the main menu
+
+
+#
+#
+#6 Scope of work:
+# - ensure that the starting state of the program includes some box types of
+# various dimensions
+
+
+
+#
+#
+#7 Scope of work:
+# - complete the implementation for Choice 4
+
+# - this should display the containers and their occupied volume, essentially the view
+# we defined earlier
+
+
+#
+#
+#8 Scope of work:
+# - complete the implementation for Choice 5
+
+# - this option should show some business summary statistics for the Freight Company,
+#  including the expected profit and loss from the contracted freight
+
+# - assume that the business charges customers $40 per unit of volume (m3) and pays
+# $200 per container
+
+
+#
+#
+#9 Scope of work:
+# - factor out the following constants into a separate database table called
+# app_config
+
+# - MAX_CONTAINER_STORAGE -> 30
+# - COST_PER_CONTAINER -> 200
+# - CUBIC_METRE_CHARGEOUT -> 40
+
+# - update the rest of the application to use the database-stored configuration

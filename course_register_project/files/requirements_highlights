@@ -1,0 +1,20 @@
+- a CLI to record students, courses, students' 
+enrollment in courses and grades
+
+- persistence to be implemented in MySQL, with 
+validation mostly on the databse side
+
+- some courses will have other courses as 
+prerequisites, e.g. Course requires CourseA to 
+have been taken with a minimum grade of 70
+
+- the program should record integer grades for 
+each course, but also have the ability to transalte 
+to letter grades, e.g. 92-> A, 81 -> B
+
+- should generate transcripts and enrollment 
+reports for a student, as well show top students 
+(by gpa) and top courses (by enrollment)
+
+
+https://typer.tiangolo.com

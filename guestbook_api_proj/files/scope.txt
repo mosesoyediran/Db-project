@@ -1,0 +1,459 @@
+####################
+# CHALLENGE 1      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - write the DDL to define the users and tokens tables, which will support the
+# user registration flow
+
+# - the users table should include the following fields
+#     * id, a primary key
+#     * email, a required text field
+#     * password, a required text field
+#     * active, a boolean that defaults to false
+#     * created_at, a timestamp that defaults to the time when the record is created
+#     * activated_at, a nullable timestamp with no default
+
+
+# the tokens table should include the following fields:
+#     * id, a primary key
+#     * token, a required text field
+#     * user_id, a foreign key to the users.id
+#     * created_at, a timestamp that defaults to the time when the record is created
+
+
+
+####################
+# CHALLENGE 2      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - persist the registered user to the database. in other words, store the email
+# and hashed password for each valid registration
+
+# - bonus: before saving, validate that the password is at least 8 chars in length
+
+
+####################
+# CHALLENGE 3      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - refactor the code responsible for saving the user to the database so that is relies on a behavior
+# of the Database class instead with the following signature:
+
+    #     db.write(table: str, columns: list[str], values: list)
+
+# e.g. instead of our current context manager insert statement, we'd say:
+#     db.write('users', ['email', 'password'], [email, hashed_password]) -> int
+
+    # * the first argument "users" specifies the table name
+    # * the second argument indicates the list of columns we're inserting into
+    # * the third argument reflects the values being inserted
+
+# in addition, also ensure that the .write() method of the Database type returns the id of the
+# newly inserted record
+
+
+####################
+# CHALLENGE 4      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - generate a random uuid (i.e. v4) that will serve as the registration token
+
+# - hint: you could use the built-in uuid module in python, eg
+        # from uuid import uuid4
+        # str(uuid4())
+        # 91148331-c2e5-4ea0-a0aa-d817cfce735c
+
+# - save the uuid into the tokens table when the user registers
+
+
+
+＃＃＃＃＃＃＃＃＃＃＃＃
+# CHALLENGE 5
+####################
+# SCOPE OF WORK
+#＃＃＃###＃＃##＃＃###
+
+# - implement a get_one() method in the Database type which will allow generalized LIMIT 1, SELECT
+# queries
+
+# - the signature should be something similar to the following:
+#
+    def get_one(self, table: str, columns: list[str], where: dict = None):
+    pass
+
+# - the method should generate and execute a query that selects the specified columns from the table
+# indicated, subject to the conditions indicated in the where dict. for example:
+# db.get_one ("tokens", ["token", "user_id"], where={"token"; "abc", "user_id": 27)
+# should generate the following query:
+#
+    SELECT token, user_id FROM tokens WHERE token='abc' and user_id=2;
+#
+- the method should execute the generated SQL and return the first result
+
+
+
+####################
+# CHALLENGE 6      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a more general .get() method that introduces a limit parameter, e.g. signature
+
+    # def get(self, table: str, columns: list[str], limit: int = None, where: dict = None):
+    #     pass
+
+# - refactor the .get_one() method to refer to the more generalized .get() method defined above
+
+# - note: the refactor should not result in any changes to our interface code
+
+
+
+####################
+# CHALLENGE 7      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement an .update() method for our Database type. Sample signature:
+
+    # def update(self, table: str, columns: list[str], data: list, where: dict = None):
+    #   pass
+
+# - For example:
+
+    # db.update('users', ['active', 'col2'], ['true', 'val2'], where={'id': 2})
+
+# should generate the following statement
+
+#     UPDATE users SET active = true, col2 = val2 WHERE id = 2;
+
+# - the method should execute the dynamically generated statement and return the number of
+# rows affected by the update
+
+
+
+
+
+####################
+# CHALLENGE 8      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - complete the /activate workflow. specifically, when an HTTP POST method is received at the
+# endpoint:
+
+    #  - verify that the token exists
+    #  - if it does, update the corresponding user's account to be active,
+    #     and capture the activated_at timestamp
+    #  - if it is not, raise an HTTP exception indicating that the token is invalid
+
+
+
+####################
+# CHALLENGE 9      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - ensure that the account status update (active = true, activated_at = current_timestamp) only occurs
+# when the token is valid and the account is inactive
+
+
+
+####################
+# CHALLENGE 10     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - create a new table called guestbook, which will store messsages. It should capture the following
+# attributes, in addition to its primary key:
+
+    #     message - the user's message; cannot be null
+    #     user_id - the user posting the message; cannot be null + must be a FK to users
+    #     private - a boolean to indicate whether the message is private or not
+    #     created_at - the timestamp when the message was created; default to record insertion time
+    #     updated_at - the timestamp when the message was updated
+
+# - implement the right logic for HTTP POST /messages to insert messages to the table. For the time
+# being, we could hardcode user_id to a fixed value. We
+
+
+
+####################
+# CHALLENGE 11     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a new HTTP PATCH (or PUT) /messages/{message_id} route to allow users to update
+#  the message content and its privacy
+
+# - this should be an authenticated route
+
+# - in addition, only owners of the message should be allowed to update a given message
+
+
+
+####################
+# CHALLENGE 12     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a new HTTP GET /messages/{message_id} route to allow users to view single, specific
+#  messages by id
+
+# - this should be an authenticated route
+
+# - the authenticated user should not be allowed to view private messages posted by other users
+
+# - though private messages posted by the authenticated user should be accessible
+
+# - the route should return the message as json but show only 3 attributes: the id of the message,
+#  its content and when it was created. For example:
+
+    # {
+    #   "id": 6,
+    #   "message": "a sample msg",
+    #   "created_at": "2022-10-16T21:00:39.541505"
+    # }
+
+
+
+####################
+# CHALLENGE 13     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a new HTTP GET /messages route to allow users to view all public messages, in addition
+# to the private ones they own
+
+# - this should be an authenticated route
+
+# - the route should accept a single query parameter called num, which will control how many messages
+# will be returned. This should be an optional param that defaults to 10.
+
+# - the route should return a json of message objects, each of which will contain only 3 attributes:
+#  the id of the message, its content and when it was created. For example:
+
+    # [
+    #   {
+    #     "id": 6,
+    #     "message": "a public msg",
+    #     "created_at": "2022-10-16T21:00:39.541505"
+    #   },
+    #   {
+    #     "id": 7,
+    #     "message": "a new public message",
+    #     "created_at": "2022-10-16T21:31:29.262563"
+    #   }
+    # ]
+
+
+
+
+####################
+# CHALLENGE 14     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a database .delete() method that generates dynamic SQL to delete from a specified
+# table under an arbitrary number of conditions
+
+# - suggested signature:
+
+    # def delete(self, table: str, where: dict = None):
+    #     pass
+
+# - sample usage:
+
+    # db.delete("table", where={"k1": "v1", "k2": "v2"})
+
+# should generate
+
+    # DELETE from table WHERE k1 = v1 AND k2 = v2;
+
+# - the method should execute the generated SQL and return the number of records affected
+# by the operation
+
+
+
+####################
+# CHALLENGE 15     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a new HTTP DELETE /messages/{message_id} route to enable users to delete messages they
+# own
+
+# - this should be an authenticated route
+
+# - in addition, users should only be allowed to delete messages that they had posted before
+
+
+
+####################
+# CHALLENGE 16     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a new Database method that is similar to our current .get() except it supports the LIKE
+#  operator
+
+# - the method should scan a given table across the specified number of columns for a given
+#  search term, and return all records that match that character pattern
+
+# - suggested signature:
+
+#     def get(self, table: str, columns: list[str], limit: int = None, where: dict = None, or_where: dict = None,
+#             contains: dict = None):
+#         pass
+
+# - example 1:
+
+    # db.get("table", ["col1", "col2"], contains={"col3": "val1", "col4": "val4"})
+
+# should generate:
+
+    # SELECT col1, col2 FROM table WHERE col3 LIKE '%val1%' OR col4 LIKE '%val4%';
+
+# - example 2:
+
+    # db.get("table", ["col1", "col2"],
+        #       where={"col2": "val2"},
+        #       contains={"col3": "val1", "col4": "val4"})
+
+# should generate:
+
+    # SELECT col1, col2 FROM table WHERE col2 = 'val2' AND col3 LIKE '%val1%' OR col4 LIKE '%val4%';
+
+# - the method should fetch and return all records obtained from executing the dynamically
+# generated query
+
+
+
+####################
+# CHALLENGE 17     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - refactor the implementation for Database .get() so that it supports the LIKE operator too
+
+# - unlike .get_contains(), we're looking for more precise search alongisde specific columns
+# and values, specified in a dictionary
+
+# importantly, there could be more than one key-value, which should be combined with logical OR
+
+# - suggested signature:
+
+    # def get_contains(self, table: str, columns: list[str], search: str, limit: int = None):
+    #     pass
+
+# - sample usage:
+
+    # db.get_contains("table", ["col1", "col2"], "trm", 2)
+
+# should generate
+
+    # SELECT col1, col2 FROM table WHERE col1 LIKE '%trm%' or col2 LIKE '%trm%' LIMIT 2;
+
+# - the method should fetch and return all records returned by the dynamically generated query
+
+
+
+####################
+# CHALLENGE 18     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - implement a HTTP GET /messages/search route which lets users search the guestbook by a given
+# search term, obtaining a maximum of num messages back, where search_term and num are query
+# parameters
+
+# - this should be an authenticated route
+
+# - the route should return a json array of messages that include the search term and are either
+# public or private but posted by the authenticated user
+
+
+####################
+# CHALLENGE 19     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - create a new database table called upvotes that will store which user upvotes (or likes) which
+# message
+
+# - in addition to its own primary key, the table should store the following fields,
+# all non-nullable
+
+    # - user_id, to reference users.id
+    # - message_id, to reference guestbook.id, and
+    # - created_at which will default to the time when the record was created
+
+
+
+####################
+# CHALLENGE 20     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - create a route HTTP POST /messages/{message_id}/upvote that will allow users to upvote messages,
+# with the votes saved in the upvotes table
+
+# - this should be an authenticated route
+
+# - in addition the following should be disallowed:
+
+    # * upvoting own messages
+    # * upvoting private messages
+    # * upvoting more than once
+
+
+####################
+# CHALLENGE 21     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - create a route HTTP GET /messages/most_upvoted that will show the 10 most popular messages in
+# descending order of upvotes they've received
+
+# - hint: this would require a join of two tables. Feel free to either create a database construct for
+# this or modify our Database type to generate the query at runtime.
+
+# - this should NOT be an authenticated route
+
+# - sample response:
+
+    # [
+    #   {
+    #     "id": 1,
+    #     "message": "a course on sqlalchemy next",
+    #     "upvotes": 19
+    #   },
+    #   {
+    #     "id": 2,
+    #     "message": "no, pydantic",
+    #     "upvotes": 12
+    #   }
+      # ]

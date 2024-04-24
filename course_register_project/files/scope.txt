@@ -1,0 +1,322 @@
+####################
+# CHALLENGE 1      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - define a connection helper that establishes a connection to the MySQL server
+#   and returns the connection object
+
+
+
+####################
+# CHALLENGE 2      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - write the DDL to define the students and courses tables
+
+# - students should store
+#     * first_name
+#     * last_name
+#     * unix_id (a short-hand unique identifier that the school assigns to each student)
+
+# - courses should store
+#     * moniker (a short-form id, like ECON101),
+#     * name (the full name of the course),
+#     * department
+
+# ...in addition to their respective primary keys
+
+# - BONUS: see if you could separate the DDL out into a standalone file rather than storing
+# it in python strings
+
+
+# CHALLENGE 3      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - introduce a new interface command called "reset-database"
+
+# - this command should recreate the database and the tables
+
+# - it need not take any arguments for now
+
+
+####################
+# CHALLENGE 4      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - complete the functionality for the "add-student" command
+
+# - this should take first_name, last_name and unix_id from the user (all of
+# which are required) and insert them into the database
+
+
+
+####################
+# CHALLENGE 5      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - complete the functionality for the "add-course" command
+
+# - this should take moniker, name and department from the user (all of
+# which are required) and insert them into the courses table
+
+
+
+####################
+# CHALLENGE 6      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - introduce a new database table to model course prerequisites
+
+# - the table should capture:
+#   * course: for which the prerequisite applies
+#   * prereq: the prerequisitive of the course
+#   * min_grade: the minimum grade the student should have earned in the prereq
+
+# - we should also validate that course and prereq are valid courses, e.g.
+# they should be foreign keys to courses table, not just any values
+
+# - further, min_grade should be validated to be between 0 and 100
+
+# - try to define the validations as part of the data model in SQL, rather than in
+# python
+
+# - finally, introduce a new 'add-prereq' command to the interface and implement
+#  the functionality required for the user to add prerequisites to the database
+
+
+
+####################
+# CHALLENGE 7      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - abstract away the cursor creation and statement execution into a standalone
+# helper called query()
+
+# - query() should take a connection, a SQL statement, and some data and handle
+# the execution of the statement
+
+# - the method's signature should support DDL, DML, and DQL statements and get
+# cues as to what it's running from the method signature, e.g.
+    # query(conn, q, data=("a", "b))  -> DML because data arg passed in
+    # query(conn, q, fetch=True)      -> DQL that wants results back
+    # query(conn, q)                  -> DDL or DQL, no results returned
+
+# - finally, refactor the other database helpers to use the query helper instead
+
+
+
+####################
+# CHALLENGE 8      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - create some student, course, and prerequisite records
+
+# - offer the user the option to seed the data when they reset the database, so
+# the new database would start out with some records instead of completely blank
+
+# - as a bonus, try to keep the above data in python data scrutures and separate
+#  from the DDL script
+
+# - as another bonus, try to extend the query() function so that it is useful to
+#  carry out single-table, multi-record inserts as part of one invocation
+
+
+
+####################
+# CHALLENGE 9      #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command called "show-prereqs" that displays all the prerequisite courses
+# alongside their required minimum grades
+
+# - the command should accept a course moniker as its only required argument
+    # python registrar.py show-prereqs cs304
+
+# - it should output to the terminal the output in tabular format
+    # rich Table
+
+
+
+
+
+####################
+# CHALLENGE 10     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command called "show-students" that displays all the students whose last name
+# includes a specific string of characters
+
+# - the command should accept a single required argument
+    # python registrar.py show-students do
+    # ...would display all students whose last name includes 'do', e.g. John Doe and Jane Doe
+    # note: this is a string contains/regex like operator; not an equality operator
+
+
+# - add a new command called "show-courses" that displays all the courses gor a given department
+
+# - the command should accept a single required argument
+    # python registrar.py show-courses "computer science"
+    # ...would display all the courses in the CS department
+
+
+####################
+# CHALLENGE 11     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - define a new table to record course enrollments, e.g. a student_course table that stores the
+# following
+
+    # * student: the student's unix id, e.g. jd1
+    # * course: the course's moniker, e.g. CS304
+    # * year: the year in which the user enrolled, e.g. 2023
+    # * grade: the grade the student has earned in the course
+
+# - in terms of data integrity,
+    # * please ensure student and course are valid references to the entities they relate to, not
+    # just any value, and
+    # * a student cannot enroll in the same course in the same year more than once, and
+    # * the grade should be an integer between 0 and 100
+
+# - add a new command called "enroll" that enrolls a student into the course.
+
+# at this point, it's NOT necessary to check that the prerequisites are met.
+
+
+
+####################
+# CHALLENGE 12     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - define a new command called 'grade' which should update the grade in an enrollment record, e.g.
+    # python registrar.py grade jd1 econ101 100
+    # ...would update jd1's econ101 grade to 100
+
+# - the method should also accept an optional year argument to support use cases where a grade is
+# being upgraded for a course taken in a previous year. If this argument, is not specified, it
+#  defaults to the current year.
+    #     jd1 econ101 2021 90 -> updates the 2021 enrollment
+    #     jd1 econ101 90      -> updates the current (runtime) year enrollment
+
+
+####################
+# CHALLENGE 13     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add logic to enforce that the course prerequisites are met before a student is allowed to enroll
+# in a given course
+
+
+####################
+# CHALLENGE 14     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command called "unenroll" that unenrolls a student from a course
+# in a given year
+
+# - the year should ideally be an optional argument that defaults to the current year if not
+# specified
+
+
+####################
+# CHALLENGE 15     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command called "current-courses" that shows all the courses a student is taking
+
+# - assume that if a user is enrolled in a course but does not have a grade yet, then it's because
+# they are currently taking the course
+
+
+
+####################
+# CHALLENGE 16     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command called "transcript" that shows all the courses a student has taken
+    # python registrar.py transcript jd1
+
+# - the course moniker, year taken, and grade for each course should be shown
+
+# - in addition, also calculate and display the average GPA for the student
+
+
+####################
+# CHALLENGE 17     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add letter grades (alongisde integer grades) to the transcript we built in the previous challenge
+
+# - assume the following thresholds:
+    # 90 for an "A"
+    # 80 for "B"
+    # 70 for "C"
+    # 60 for "D"
+    # "F" for anything lower
+
+# - the same "transcript" command should display a new column called "Letter Grade" to display this
+# output
+
+
+####################
+# CHALLENGE 18     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command "most-enrolled" that displays the top n most popular courses, measured by
+# historical student enrollment
+
+# - n should be an optional argument. When not specified, it should default to 10
+
+
+####################
+# CHALLENGE 19     #
+####################
+# SCOPE OF WORK    #
+####################
+
+# - add a new command "top-students" that displays the top n students, ranked by average grade earned
+
+# - n should be an optional argument. When not specified, it should default to 10
+
+# - the command should display the following columns:
+    # * student's unix id
+    # * students first name
+    # * student's last name
+    # * the number of courses the student has taken (and earned a grade in)
+    # * the average grade earned by that student
+

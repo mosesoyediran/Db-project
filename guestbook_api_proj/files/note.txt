@@ -1,0 +1,9 @@
+Dependency Injection
+- a pattern of having code declare that it needs other code
+- the app takes care of obtaining the dependencies and injecting them
+- useful in enforcing security, sharing database connections, and logic generally with little repetition
+
+
+
+
+psql -h containers-us-west-171.railway.app -f DDL.sql the_database

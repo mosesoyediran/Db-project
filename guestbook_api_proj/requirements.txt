@@ -1,0 +1,22 @@
+fastapi
+
+# Server
+uvicorn
+
+# Postgres
+psycopg2
+
+
+# enviroment
+python-dotenv
+
+
+# Validators & password hashing
+email-validator
+passlib
+bcrypt
+
+
+python-multipart
+
+

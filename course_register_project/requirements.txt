@@ -1,0 +1,4 @@
+rich
+typer
+mysql-connector-python==8.0.29
+python-dotenv
